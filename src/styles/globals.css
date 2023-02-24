@@ -1,0 +1,8 @@
+@tailwind base;
+@layer base {
+    html {
+        @apply text-slate-100;
+    }
+}
+@tailwind components;
+@tailwind utilities;
