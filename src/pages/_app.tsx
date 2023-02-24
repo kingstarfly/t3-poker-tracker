@@ -4,14 +4,17 @@ import { Inter } from "next/font/google";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <main className={inter.className}>
-      <Component {...pageProps} />
-    </main>
+    <div className={clsx(inter.className, "flex justify-center bg-slate-800")}>
+      <div className="w-96 max-w-lg">
+        <Component {...pageProps} />
+      </div>
+    </div>
   );
 };
 
