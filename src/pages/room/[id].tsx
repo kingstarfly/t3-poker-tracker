@@ -1,9 +1,15 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
 import ColouredBox from "~/components/ColouredBox";
 
 export default function Room() {
   const router = useRouter();
   const id = router.query.id as string;
+
+  const [redScore, setRedScore] = useState(0);
+  const [greenScore, setGreenScore] = useState(0);
+  const [blueScore, setBlueScore] = useState(0);
+  const [yellowScore, setYellowScore] = useState(0);
 
   return (
     <div className="flex min-h-screen flex-col px-4">
@@ -19,7 +25,7 @@ export default function Room() {
             <div className="col-start-1 col-end-3 justify-self-end text-xs font-medium">
               PLAYER
             </div>
-            <div className="col-span-2 col-start-4 aspect-square w-5  rounded-full bg-yellow-300" />
+            <div className="col-span-2 col-start-4 aspect-square w-5  rounded-full bg-yellow-200" />
             <div className="col-span-2 aspect-square w-5 rounded-full bg-blue-400" />
             <div className="col-span-2 aspect-square w-5 rounded-full bg-red-400" />
             <div className="col-span-2 aspect-square w-5 rounded-full bg-green-300" />
@@ -46,11 +52,31 @@ export default function Room() {
 
         <section className="flex flex-col items-stretch gap-y-2">
           <h2 className="text-center text-xl uppercase">ROUND X</h2>
-          <div className="relative grid aspect-square w-full place-items-center bg-red-900 bg-opacity-30">
-            <ColouredBox colour="green" className="absolute translate-y-16" />
-            <ColouredBox colour="blue" className="absolute -translate-y-16" />
-            <ColouredBox colour="red" className="absolute translate-x-16" />
-            <ColouredBox colour="yellow" className="absolute -translate-x-16" />
+          <div className="relative grid aspect-square w-full place-items-center">
+            <ColouredBox
+              colour="green"
+              score={greenScore}
+              setScore={setGreenScore}
+              className="absolute translate-y-16"
+            />
+            <ColouredBox
+              colour="blue"
+              score={blueScore}
+              setScore={setBlueScore}
+              className="absolute -translate-y-16"
+            />
+            <ColouredBox
+              colour="red"
+              score={redScore}
+              setScore={setRedScore}
+              className="absolute translate-x-16"
+            />
+            <ColouredBox
+              colour="yellow"
+              score={yellowScore}
+              setScore={setYellowScore}
+              className="absolute -translate-x-16"
+            />
           </div>
         </section>
       </main>
