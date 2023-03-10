@@ -10,16 +10,18 @@ const inter = Inter({ subsets: ["latin"] });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <div
-      className={clsx(
-        inter.className,
-        "[dark] flex justify-center bg-slate-800"
-      )}
-    >
-      <div className="w-96 max-w-lg">
-        <Component {...pageProps} />
+    <>
+      <style jsx global>{`
+        html {
+          font-family: ${inter.style.fontFamily};
+        }
+      `}</style>
+      <div className="flex justify-center bg-slate-800">
+        <div className="flex w-96 max-w-lg ">
+          <Component {...pageProps} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

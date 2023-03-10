@@ -1,10 +1,19 @@
-import { History, HistoryIcon } from "lucide-react";
+import { CreditCard, HistoryIcon, Menu, RefreshCcw, Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import ColouredBox from "~/components/ColouredBox";
 import HistoryRow from "~/components/HistoryRow";
 import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSubContent,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { api } from "~/utils/api";
 
 export default function Room() {
@@ -58,10 +67,29 @@ export default function Room() {
 
   return (
     <div className="flex min-h-screen flex-col px-4">
-      <header className="sticky top-0 z-40 w-full">
+      <header className="">
         <div className="container flex h-16 flex-row items-center justify-between">
-          <h1>Four of a Kind</h1>
-          Menu
+          <h1>FOUR OF A KIND</h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Menu />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Room name: random-name-here</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <div className="flex flex-row items-center gap-2">
+                  <Send size={16} />
+                  <div>Send Feedback</div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex flex-row items-center gap-2">
+                  <RefreshCcw size={16} /> Reset Game
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       {roomData.isLoading ? (

@@ -1,8 +1,30 @@
 @tailwind base;
 @layer base {
-    html {
-        @apply text-slate-100;
-    }
+  html {
+    @apply text-slate-100;
+  }
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--primary);
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+      width: 8px;
+      @apply bg-slate-800;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 100px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-slate-700;
+    border-radius: 100px;
+    border: 1px solid var(--primary);
+  }
 }
 @tailwind components;
 @tailwind utilities;
