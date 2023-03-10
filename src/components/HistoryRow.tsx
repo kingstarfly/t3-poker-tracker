@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 type HistoryRowProps = {
@@ -13,9 +14,9 @@ type HistoryRowProps = {
 const HistoryRow = ({ round, scores }: HistoryRowProps) => {
   return (
     <div className="grid grid-cols-12 place-items-center gap-y-2 text-xs font-normal">
-      <span className="col-start-2 col-end-4 justify-self-end ">
-        ROUND {round}
-      </span>
+      <div className="col-start-1 col-end-4 flex flex-row justify-self-end">
+        ROUND <p className="w-4 text-right">{round}</p>
+      </div>
       <span className="col-span-2 col-start-5">
         {displayScore(scores.yellowScore)}
       </span>

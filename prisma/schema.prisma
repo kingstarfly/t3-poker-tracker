@@ -28,7 +28,6 @@ model HistoryRecord {
     updatedAt DateTime @updatedAt
     room      Room     @relation(fields: [roomId], references: [id])
     roomId    Int
-    round Int
     yellowScore Int
     blueScore Int
     redScore Int

@@ -1,7 +1,7 @@
 import { History, HistoryIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ColouredBox from "~/components/ColouredBox";
 import HistoryRow from "~/components/HistoryRow";
 import { Button } from "~/components/ui/button";
@@ -22,6 +22,39 @@ export default function Room() {
   const [greenScore, setGreenScore] = useState(0);
   const [blueScore, setBlueScore] = useState(0);
   const [yellowScore, setYellowScore] = useState(0);
+
+  const trpcUtils = api.useContext();
+  const addHistoryRecord = api.room.addHistoryRecord.useMutation({
+    onSuccess: () => {
+      trpcUtils.room.getRoom.invalidate({ roomID: +id });
+      setRedScore(0);
+      setGreenScore(0);
+      setBlueScore(0);
+      setYellowScore(0);
+    },
+  });
+
+  // Memoised value of each player's total score based on roomData.data.history
+  const totalScores = useMemo(() => {
+    if (roomData.data) {
+      const { history } = roomData.data;
+      const totalScores = {
+        red: 0,
+        green: 0,
+        blue: 0,
+        yellow: 0,
+      };
+
+      history.forEach((record) => {
+        totalScores.red += record.redScore;
+        totalScores.green += record.greenScore;
+        totalScores.blue += record.blueScore;
+        totalScores.yellow += record.yellowScore;
+      });
+
+      return totalScores;
+    }
+  }, [roomData]);
 
   return (
     <div className="flex min-h-screen flex-col px-4">
@@ -50,7 +83,7 @@ export default function Room() {
         </div>
       ) : (
         <>
-          <main className="flex flex-1 flex-col items-stretch gap-y-4">
+          <main className="flex flex-1 flex-col items-stretch gap-y-8">
             <section className="rounded-lg bg-gradient-to-b from-[#F1F5F94D] to-[#F1F5F933] py-4 px-4">
               <div className="grid grid-cols-12 place-items-center gap-y-2 text-lg">
                 <div className="col-start-2 col-end-4 justify-self-end text-xs font-medium">
@@ -64,10 +97,12 @@ export default function Room() {
                 <div className="col-start-2 col-end-4 justify-self-end text-xs font-medium">
                   SUBTOTAL
                 </div>
-                <div className="col-span-2 col-start-5">4</div>
-                <div className="col-span-2">3</div>
-                <div className="col-span-2">2</div>
-                <div className="col-span-2">1</div>
+                <div className="col-span-2 col-start-5">
+                  {totalScores?.yellow}
+                </div>
+                <div className="col-span-2">{totalScores?.blue}</div>
+                <div className="col-span-2">{totalScores?.red}</div>
+                <div className="col-span-2">{totalScores?.green}</div>
               </div>
             </section>
 
@@ -80,29 +115,31 @@ export default function Room() {
                   </div>
                 </div>
               )}
-              {roomData.data.history?.map((record, index) => {
-                const scores = {
-                  redScore: record.redScore,
-                  greenScore: record.greenScore,
-                  blueScore: record.blueScore,
-                  yellowScore: record.yellowScore,
-                };
+              <div className="flex flex-col gap-y-3 text-slate-400">
+                {roomData.data.history?.map((record, index, records) => {
+                  const scores = {
+                    redScore: record.redScore,
+                    greenScore: record.greenScore,
+                    blueScore: record.blueScore,
+                    yellowScore: record.yellowScore,
+                  };
 
-                return (
-                  <HistoryRow
-                    key={index}
-                    round={record.round}
-                    scores={scores}
-                  />
-                );
-              })}
+                  return (
+                    <HistoryRow
+                      key={index}
+                      round={records.length - index}
+                      scores={scores}
+                    />
+                  );
+                })}
+              </div>
             </section>
 
             <section className="flex flex-col items-stretch gap-y-2">
               <h2 className="text-center text-xl uppercase">
                 ROUND {roomData.data.history.length + 1}
               </h2>
-              <div className="relative grid aspect-square w-full place-items-center">
+              <div className="grid h-60 w-full place-items-center">
                 <ColouredBox
                   colour="green"
                   score={greenScore}
@@ -132,8 +169,22 @@ export default function Room() {
           </main>
           <footer className="z-40 w-full flex-grow-0">
             <div className="container flex h-16 flex-row items-center justify-between">
-              <Button>Undo</Button>
-              <Button>Next</Button>
+              <Button>Undo Round</Button>
+              <Button
+                onClick={() => {
+                  addHistoryRecord.mutate({
+                    roomID: +id,
+                    scores: {
+                      yellowScore,
+                      blueScore,
+                      redScore,
+                      greenScore,
+                    },
+                  });
+                }}
+              >
+                Next Round
+              </Button>
             </div>
           </footer>
         </>

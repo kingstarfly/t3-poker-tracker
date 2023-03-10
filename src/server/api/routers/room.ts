@@ -15,11 +15,15 @@ export const roomRouter = createTRPCRouter({
       return ctx.prisma.room.findFirstOrThrow({
         where: { id: input.roomID },
         include: {
-          history: true,
+          history: {
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
         },
       });
     }),
-  addHistory: publicProcedure
+  addHistoryRecord: publicProcedure
     .input(
       z.object({
         roomID: z.number(),
