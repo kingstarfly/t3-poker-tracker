@@ -10,8 +10,27 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
+model Room {
+    id        Int      @id @default(autoincrement())
+    name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    history   HistoryRecord[]
+    yellowScore Int
+    blueScore Int
+    redScore Int
+    greenScore Int
+}
+
+model HistoryRecord {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    room      Room     @relation(fields: [roomId], references: [id])
+    roomId    Int
+    round Int
+    yellowScore Int
+    blueScore Int
+    redScore Int
+    greenScore Int
 }
