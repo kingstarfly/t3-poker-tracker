@@ -14,7 +14,7 @@ const HistoryRow = ({ round, scores }: HistoryRowProps) => {
   return (
     <div className="grid grid-cols-12 place-items-center gap-y-2 text-xs font-normal">
       <div className="col-start-1 col-end-4 flex flex-row justify-self-end">
-        ROUND <p className="w-4 text-right">{round}</p>
+        ROUND <p className="w-5 text-right">{round}</p>
       </div>
       <span className="col-span-2 col-start-5">
         {displayScore(scores.yellowScore)}

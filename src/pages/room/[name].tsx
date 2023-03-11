@@ -146,7 +146,7 @@ export default function Room() {
       ) : (
         <>
           <main className="flex flex-1 flex-col items-stretch gap-y-2">
-            <section className="rounded-lg bg-gradient-to-b from-[#F1F5F94D] to-[#F1F5F933] py-2 px-4">
+            <section className="rounded-lg bg-gradient-to-b from-[#F1F5F94D] to-[#F1F5F933] py-4 px-4">
               <div className="grid grid-cols-12 place-items-center gap-y-2 text-lg">
                 <div className="col-start-2 col-end-4 justify-self-end text-xs font-medium">
                   PLAYER
