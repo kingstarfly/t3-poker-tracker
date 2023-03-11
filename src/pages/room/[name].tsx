@@ -96,7 +96,9 @@ export default function Room() {
     <div className="flex h-screen w-full flex-col px-4">
       <header className="">
         <div className="container flex h-16 flex-row items-center justify-between">
-          <h1>FOUR OF A KIND</h1>
+          <Link href="/">
+            <h1>FOUR OF A KIND</h1>
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Menu />
