@@ -1,10 +1,8 @@
+import "~/styles/globals.css";
+
 import { type AppType } from "next/app";
 import { Inter } from "next/font/google";
-
 import { api } from "~/utils/api";
-
-import "~/styles/globals.css";
-import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"] });
 

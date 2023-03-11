@@ -7,6 +7,15 @@
  * need to use are documented accordingly near the end.
  */
 
+import superjson from "superjson";
+import { prisma } from "~/server/db";
+
+/**
+ * 2. INITIALIZATION
+ *
+ * This is where the tRPC API is initialized, connecting the context and transformer.
+ */
+import { initTRPC } from "@trpc/server";
 /**
  * 1. CONTEXT
  *
@@ -15,8 +24,6 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-
-import { prisma } from "~/server/db";
 
 type CreateContextOptions = Record<string, never>;
 
@@ -45,14 +52,6 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   return createInnerTRPCContext({});
 };
-
-/**
- * 2. INITIALIZATION
- *
- * This is where the tRPC API is initialized, connecting the context and transformer.
- */
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

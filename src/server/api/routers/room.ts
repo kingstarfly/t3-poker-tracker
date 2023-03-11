@@ -1,12 +1,6 @@
-import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
-} from "unique-names-generator";
-import { z } from "zod";
-
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { z } from 'zod';
+import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 /*
     Required procedures:

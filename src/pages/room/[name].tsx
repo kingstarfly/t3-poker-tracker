@@ -33,18 +33,26 @@ export default function Room() {
 
   const trpcUtils = api.useContext();
   const addHistoryRecord = api.room.addHistoryRecord.useMutation({
-    onSuccess: () => {
-      trpcUtils.room.getRoom.invalidate({ roomName: roomName });
-      setRedScore(0);
-      setGreenScore(0);
-      setBlueScore(0);
-      setYellowScore(0);
+    onSuccess: async () => {
+      try {
+        await trpcUtils.room.getRoom.invalidate({ roomName: roomName });
+        setRedScore(0);
+        setGreenScore(0);
+        setBlueScore(0);
+        setYellowScore(0);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
   const undoLastHistoryRecord = api.room.undoLastHistoryRecord.useMutation({
-    onSuccess: () => {
-      trpcUtils.room.getRoom.invalidate({ roomName: roomName });
+    onSuccess: async () => {
+      try {
+        await trpcUtils.room.getRoom.invalidate({ roomName: roomName });
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -114,8 +122,8 @@ export default function Room() {
       ) : !roomData || !roomData.data || roomData.error ? (
         <div className="flex h-40 flex-col items-center justify-center gap-4">
           <div className="text-center text-sm text-slate-100">
-            This room ID doesn't exist. You might want to check the ID or create
-            a new room!
+            This room ID does not exist. You might want to check the ID or
+            create a new room!
           </div>
           <Button>
             <Link href="/">Home</Link>

@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -19,8 +18,12 @@ const Home: NextPage = () => {
   const trpcUtils = api.useContext();
 
   const createRoom = api.room.createRoom.useMutation({
-    onSuccess: (room) => {
-      router.push(`/room/${room.name}`);
+    onSuccess: async (room) => {
+      try {
+        await router.push(`/room/${room.name}`);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -35,7 +38,7 @@ const Home: NextPage = () => {
     try {
       const room = await trpcUtils.room.getRoom.fetch({ roomName: roomName });
       if (room) {
-        router.push(`/room/${roomName}`);
+        await router.push(`/room/${roomName}`);
       } else {
         setShowError(true);
       }
@@ -86,8 +89,12 @@ const Home: NextPage = () => {
                 />
                 <Button
                   type="submit"
-                  onClick={() => {
-                    joinRoom(userInputRoomName);
+                  onClick={async () => {
+                    try {
+                      await joinRoom(userInputRoomName);
+                    } catch (error) {
+                      console.log(error);
+                    }
                   }}
                   disabled={isJoiningRoom}
                   className="w-20"
