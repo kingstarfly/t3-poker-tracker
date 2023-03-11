@@ -31,6 +31,8 @@ export default function Room() {
   const [blueScore, setBlueScore] = useState(0);
   const [yellowScore, setYellowScore] = useState(0);
 
+  const [isMutating, setIsMutating] = useState(false);
+
   const trpcUtils = api.useContext();
   const addHistoryRecord = api.room.addHistoryRecord.useMutation({
     onSuccess: async () => {
@@ -44,6 +46,12 @@ export default function Room() {
         console.log(error);
       }
     },
+    onMutate: () => {
+      setIsMutating(true);
+    },
+    onSettled: () => {
+      setIsMutating(false);
+    },
   });
 
   const undoLastHistoryRecord = api.room.undoLastHistoryRecord.useMutation({
@@ -53,6 +61,12 @@ export default function Room() {
       } catch (error) {
         console.log(error);
       }
+    },
+    onMutate: () => {
+      setIsMutating(true);
+    },
+    onSettled: () => {
+      setIsMutating(false);
     },
   });
 
@@ -79,7 +93,7 @@ export default function Room() {
   }, [roomData]);
 
   return (
-    <div className="flex min-h-screen flex-col px-4">
+    <div className="flex h-screen w-full flex-col px-4">
       <header className="">
         <div className="container flex h-16 flex-row items-center justify-between">
           <h1>FOUR OF A KIND</h1>
@@ -131,8 +145,8 @@ export default function Room() {
         </div>
       ) : (
         <>
-          <main className="flex flex-1 flex-col items-stretch gap-y-8">
-            <section className="rounded-lg bg-gradient-to-b from-[#F1F5F94D] to-[#F1F5F933] py-4 px-4">
+          <main className="flex flex-1 flex-col items-stretch gap-y-2">
+            <section className="rounded-lg bg-gradient-to-b from-[#F1F5F94D] to-[#F1F5F933] py-2 px-4">
               <div className="grid grid-cols-12 place-items-center gap-y-2 text-lg">
                 <div className="col-start-2 col-end-4 justify-self-end text-xs font-medium">
                   PLAYER
@@ -154,7 +168,7 @@ export default function Room() {
               </div>
             </section>
 
-            <section className="h-24 w-full overflow-y-auto px-4">
+            <section className="h-20 w-full overflow-y-auto px-4">
               {roomData.data.history.length === 0 && (
                 <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
                   <HistoryIcon />
@@ -183,7 +197,7 @@ export default function Room() {
               </div>
             </section>
 
-            <section className="flex flex-col items-stretch gap-y-2">
+            <section className="flex flex-col items-stretch gap-y-4">
               <h2 className="text-center text-xl uppercase">
                 ROUND {roomData.data.history.length + 1}
               </h2>
@@ -218,6 +232,7 @@ export default function Room() {
           <footer className="z-40 w-full flex-grow-0">
             <div className="container flex h-16 flex-row items-center justify-between">
               <Button
+                className="w-32"
                 onClick={() => {
                   if (roomData.data?.id) {
                     undoLastHistoryRecord.mutate({
@@ -226,9 +241,17 @@ export default function Room() {
                   }
                 }}
               >
-                Undo Round
+                {isMutating ? (
+                  <div
+                    className="h-4 w-4 animate-spin rounded-full
+          border-2 border-solid border-slate-800 border-t-transparent"
+                  />
+                ) : (
+                  "Undo Round"
+                )}
               </Button>
               <Button
+                className="w-32"
                 onClick={() => {
                   if (roomData.data?.id) {
                     addHistoryRecord.mutate({
@@ -243,7 +266,14 @@ export default function Room() {
                   }
                 }}
               >
-                Next Round
+                {isMutating ? (
+                  <div
+                    className="h-4 w-4 animate-spin rounded-full
+          border-2 border-solid border-slate-800 border-t-transparent"
+                  />
+                ) : (
+                  "Next Round"
+                )}
               </Button>
             </div>
           </footer>

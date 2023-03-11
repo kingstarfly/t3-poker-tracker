@@ -99,7 +99,14 @@ const Home: NextPage = () => {
                   disabled={isJoiningRoom}
                   className="w-20"
                 >
-                  {isJoiningRoom ? <Loader2 /> : "Join"}
+                  {isJoiningRoom ? (
+                    <div
+                      className="h-4 w-4 animate-spin rounded-full
+          border-2 border-solid border-slate-800 border-t-transparent"
+                    />
+                  ) : (
+                    "Join"
+                  )}
                 </Button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import React from 'react';
+import { Minus, MinusCircle, MinusSquare, Plus } from "lucide-react";
+import React from "react";
 
 type ColouredBoxProps = React.HTMLAttributes<HTMLDivElement> & {
   colour: "red" | "green" | "blue" | "yellow";
@@ -24,13 +25,13 @@ const ColouredBox = ({
     <div className={clsx(className, "grid w-12 place-items-center")}>
       <div
         className={clsx(
-          "absolute flex w-full flex-row items-center justify-center text-center",
+          "absolute flex items-center justify-center gap-1 text-center",
 
           {
-            "translate-y-[165%]": colour === "green",
-            "-translate-y-[165%]": colour === "blue",
-            "translate-x-[115%]": colour === "red",
-            "-translate-x-[115%]": colour === "yellow",
+            "w-full translate-y-[165%] flex-row": colour === "green",
+            "w-full -translate-y-[165%] flex-row": colour === "blue",
+            "h-full translate-x-[165%] flex-col-reverse": colour === "red",
+            "h-full -translate-x-[165%] flex-col-reverse": colour === "yellow",
           }
         )}
       >
@@ -41,15 +42,15 @@ const ColouredBox = ({
             setScore(score - 1);
           }}
         >
-          -
+          <Minus />
         </button>
-        <div className="w-7 text-center">{score}</div>
+        <div className="w-7 text-center text-xl">{score}</div>
         <button
           className="text-slate-400"
           role="button"
           onClick={() => setScore(score + 1)}
         >
-          +
+          <Plus />
         </button>
       </div>
 
