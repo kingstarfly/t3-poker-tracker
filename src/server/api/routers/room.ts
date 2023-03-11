@@ -1,3 +1,9 @@
+import {
+  adjectives,
+  animals,
+  colors,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -7,13 +13,14 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
     1. get all information from a room
     2. add a history record to this room
     3. undo the last history record
+    4. Create a new room
 */
 export const roomRouter = createTRPCRouter({
   getRoom: publicProcedure
-    .input(z.object({ roomID: z.number().int() }))
+    .input(z.object({ roomName: z.string() }))
     .query(({ input, ctx }) => {
-      return ctx.prisma.room.findFirstOrThrow({
-        where: { id: input.roomID },
+      return ctx.prisma.room.findFirst({
+        where: { name: input.roomName },
         include: {
           history: {
             orderBy: {
@@ -73,4 +80,17 @@ export const roomRouter = createTRPCRouter({
         },
       });
     }),
+  createRoom: publicProcedure.mutation(async ({ ctx }) => {
+    const randomRoomName = uniqueNamesGenerator({
+      dictionaries: [adjectives, animals, colors],
+      separator: "-",
+      style: "lowerCase",
+      length: 3,
+    });
+    return ctx.prisma.room.create({
+      data: {
+        name: randomRoomName,
+      },
+    });
+  }),
 });

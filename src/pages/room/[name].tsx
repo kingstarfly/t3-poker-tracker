@@ -1,4 +1,4 @@
-import { CreditCard, HistoryIcon, Menu, RefreshCcw, Send } from "lucide-react";
+import { HistoryIcon, Menu, Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSubContent,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { api } from "~/utils/api";
@@ -19,9 +18,9 @@ import { api } from "~/utils/api";
 export default function Room() {
   const router = useRouter();
 
-  const id = router.query.id as string;
+  const roomName = router.query.name as string;
   const roomData = api.room.getRoom.useQuery(
-    { roomID: +id },
+    { roomName: roomName },
     {
       refetchOnWindowFocus: false,
     }
@@ -35,11 +34,17 @@ export default function Room() {
   const trpcUtils = api.useContext();
   const addHistoryRecord = api.room.addHistoryRecord.useMutation({
     onSuccess: () => {
-      trpcUtils.room.getRoom.invalidate({ roomID: +id });
+      trpcUtils.room.getRoom.invalidate({ roomName: roomName });
       setRedScore(0);
       setGreenScore(0);
       setBlueScore(0);
       setYellowScore(0);
+    },
+  });
+
+  const undoLastHistoryRecord = api.room.undoLastHistoryRecord.useMutation({
+    onSuccess: () => {
+      trpcUtils.room.getRoom.invalidate({ roomName: roomName });
     },
   });
 
@@ -75,7 +80,14 @@ export default function Room() {
               <Menu />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Room name: random-name-here</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                <div className="flex flex-col text-slate-500">
+                  <div className="tracking-widee text-[8px] uppercase leading-3 text-slate-500">
+                    Room name
+                  </div>
+                  <div>{roomData.data?.name}</div>
+                </div>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <div className="flex flex-row items-center gap-2">
@@ -83,11 +95,11 @@ export default function Room() {
                   <div>Send Feedback</div>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <div className="flex flex-row items-center gap-2">
                   <RefreshCcw size={16} /> Reset Game
                 </div>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -99,7 +111,7 @@ export default function Room() {
           border-2 border-solid border-slate-200 border-t-transparent"
           />
         </div>
-      ) : roomData.error ? (
+      ) : !roomData || !roomData.data || roomData.error ? (
         <div className="flex h-40 flex-col items-center justify-center gap-4">
           <div className="text-center text-sm text-slate-100">
             This room ID doesn't exist. You might want to check the ID or create
@@ -197,18 +209,30 @@ export default function Room() {
           </main>
           <footer className="z-40 w-full flex-grow-0">
             <div className="container flex h-16 flex-row items-center justify-between">
-              <Button>Undo Round</Button>
               <Button
                 onClick={() => {
-                  addHistoryRecord.mutate({
-                    roomID: +id,
-                    scores: {
-                      yellowScore,
-                      blueScore,
-                      redScore,
-                      greenScore,
-                    },
-                  });
+                  if (roomData.data?.id) {
+                    undoLastHistoryRecord.mutate({
+                      roomID: roomData.data.id,
+                    });
+                  }
+                }}
+              >
+                Undo Round
+              </Button>
+              <Button
+                onClick={() => {
+                  if (roomData.data?.id) {
+                    addHistoryRecord.mutate({
+                      roomID: roomData.data.id,
+                      scores: {
+                        yellowScore,
+                        blueScore,
+                        redScore,
+                        greenScore,
+                      },
+                    });
+                  }
                 }}
               >
                 Next Round

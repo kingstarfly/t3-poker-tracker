@@ -16,10 +16,6 @@ model Room {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     history   HistoryRecord[]
-    yellowScore Int
-    blueScore Int
-    redScore Int
-    greenScore Int
 }
 
 model HistoryRecord {

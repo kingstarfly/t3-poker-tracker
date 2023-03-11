@@ -1,11 +1,51 @@
+import clsx from "clsx";
+import { Loader2 } from "lucide-react";
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
+  const [userInputRoomName, setUserInputRoomName] = useState<string>("");
+  const [showError, setShowError] = useState<boolean>(false);
+  const [isJoiningRoom, setIsJoiningRoom] = useState<boolean>(false);
+
+  const trpcUtils = api.useContext();
+
+  const createRoom = api.room.createRoom.useMutation({
+    onSuccess: (room) => {
+      router.push(`/room/${room.id}`);
+    },
+  });
+
+  async function joinRoom(roomName: string) {
+    setIsJoiningRoom(true);
+    if (roomName == "") {
+      setShowError(true);
+      return;
+    }
+
+    // First check if room name exists
+    try {
+      const room = await trpcUtils.room.getRoom.fetch({ roomName: roomName });
+      if (room) {
+        router.push(`/room/${roomName}`);
+      } else {
+        setShowError(true);
+      }
+    } catch (error) {
+      setShowError(true);
+    } finally {
+      setIsJoiningRoom(false);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -25,17 +65,52 @@ const Home: NextPage = () => {
           </div>
 
           <div className="flex flex-col items-stretch">
-            <div className="flex w-full max-w-sm items-center space-x-2">
-              <Input type="text" placeholder="Room ID" />
-              <Button type="submit">Join</Button>
+            <div className="flex w-full max-w-sm flex-col gap-y-1">
+              <div
+                className={clsx(
+                  "text-xs text-red-400",
+                  showError ? "opacity-100" : "opacity-0"
+                )}
+              >
+                Room name not found!
+              </div>
+              <div className="flex w-full max-w-sm items-center space-x-2">
+                <Input
+                  type="text"
+                  placeholder="Room ID"
+                  value={userInputRoomName}
+                  onChange={(event) => {
+                    setUserInputRoomName(event.target.value);
+                    setShowError(false);
+                  }}
+                />
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    joinRoom(userInputRoomName);
+                  }}
+                  disabled={isJoiningRoom}
+                  className="w-20"
+                >
+                  {isJoiningRoom ? <Loader2 /> : "Join"}
+                </Button>
+              </div>
             </div>
+
             <div className="justify-stretch flex flex-row items-center px-4">
               <div className="flex-grow border-b border-solid border-slate-200" />
               <span className="my-4 px-4 text-sm text-slate-200">OR</span>
               <div className="flex-grow border-b border-solid border-slate-200" />
             </div>
             <div className="grid place-items-center">
-              <Button type="submit">Create a new room</Button>
+              <Button
+                type="submit"
+                onClick={() => {
+                  createRoom.mutate();
+                }}
+              >
+                Create a new room
+              </Button>
             </div>
           </div>
         </div>
