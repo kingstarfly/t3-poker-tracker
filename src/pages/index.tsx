@@ -20,7 +20,7 @@ const Home: NextPage = () => {
 
   const createRoom = api.room.createRoom.useMutation({
     onSuccess: (room) => {
-      router.push(`/room/${room.id}`);
+      router.push(`/room/${room.name}`);
     },
   });
 
