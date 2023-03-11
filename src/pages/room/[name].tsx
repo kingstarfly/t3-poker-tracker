@@ -197,7 +197,7 @@ export default function Room() {
               </div>
             </section>
 
-            <section className="flex flex-col items-stretch gap-y-4">
+            <section className="flex flex-1 flex-col items-stretch justify-center gap-y-8">
               <h2 className="text-center text-xl uppercase">
                 ROUND {roomData.data.history.length + 1}
               </h2>
