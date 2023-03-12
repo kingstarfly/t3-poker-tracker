@@ -93,7 +93,7 @@ export default function Room() {
   }, [roomData]);
 
   return (
-    <div className="flex h-screen w-full flex-col px-4">
+    <div className="flex h-[100svh] w-full flex-col px-4">
       <header className="">
         <div className="container flex h-16 flex-row items-center justify-between">
           <Link href="/">
