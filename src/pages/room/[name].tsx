@@ -235,6 +235,7 @@ export default function Room() {
             <div className="container flex h-16 flex-row items-center justify-between">
               <Button
                 className="w-32"
+                disabled={roomData.data?.history.length === 0 || isMutating}
                 onClick={() => {
                   if (roomData.data?.id) {
                     undoLastHistoryRecord.mutate({
@@ -254,6 +255,7 @@ export default function Room() {
               </Button>
               <Button
                 className="w-32"
+                disabled={isMutating}
                 onClick={() => {
                   if (roomData.data?.id) {
                     addHistoryRecord.mutate({

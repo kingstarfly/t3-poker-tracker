@@ -119,11 +119,19 @@ const Home: NextPage = () => {
             <div className="grid place-items-center">
               <Button
                 type="submit"
+                disabled={createRoom.isLoading}
                 onClick={() => {
                   createRoom.mutate();
                 }}
               >
-                Create a new room
+                {createRoom.isLoading ? (
+                  <div
+                    className="h-4 w-4 animate-spin rounded-full
+          border-2 border-solid border-slate-800 border-t-transparent"
+                  />
+                ) : (
+                  "Create a new room"
+                )}
               </Button>
             </div>
           </div>
