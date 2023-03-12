@@ -1,28 +1,20 @@
-# Create T3 App
+# Four of a Kind
+![fourofakind](https://user-images.githubusercontent.com/38955962/224550266-965ae0bc-03dd-4be9-b341-9d1b7a377b03.png)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is a simple points-tracking app for chinese poker, built with the [T3 Stack](https://create.t3.gg/).
 
-## What's next? How do I make an app with this?
+1. Create a room
+2. Adjust the scores for the round and click "Next Round"
+3. Repeat until you're done with your game
+## Tech Stack
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Meta framework: [Next.js](https://nextjs.org)
+- Database: [PostgreSQL](https://postgresql.org) hosted on [Supabase](https://supabase.com/)
+- Database ORM: [Prisma](https://prisma.io)
+- Styling: [Tailwind CSS](https://tailwindcss.com)
+- Backend: [tRPC](https://trpc.io)
+- Deployment: [Vercel](https://vercel.com)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Motivation
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+During the lunar new year, my family and I played some chinese poker. At the time, we were using a pen and paper to keep track of scores, but I found it to be a bit tedious. Thus, I made this web app to keep track of the scores.

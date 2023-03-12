@@ -257,6 +257,16 @@ export default function Room() {
                 className="w-32"
                 disabled={isMutating}
                 onClick={() => {
+                  // Check that all scores sum to 0
+                  const totalScore =
+                    yellowScore + blueScore + redScore + greenScore;
+                  if (totalScore !== 0) {
+                    alert(
+                      `The total score of all players must be 0. Currently it is ${totalScore}.`
+                    );
+                    return;
+                  }
+
                   if (roomData.data?.id) {
                     addHistoryRecord.mutate({
                       roomID: roomData.data.id,
